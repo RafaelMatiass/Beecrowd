@@ -3,10 +3,8 @@
 #include <stdbool.h>
 
 typedef struct{
-
 	unsigned short numero;
 	unsigned short posicao;
-
 } pessoa;
 
 
