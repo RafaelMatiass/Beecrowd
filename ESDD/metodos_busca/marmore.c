@@ -6,7 +6,6 @@ int comp(const void *a, const void *b) {
 }
 
 int pesquisaBinaria(int *V, int n, int valor) {
-
   int inicio = 0, fim = n;
 
   while (inicio < fim) {
@@ -14,26 +13,23 @@ int pesquisaBinaria(int *V, int n, int valor) {
 
     if (V[meio] < valor) {
       inicio = meio + 1;
-    }
-    else {
+    } else {
       fim = meio;
     }
   }
 
-  return V[inicio] == valor ? inicio + 1 : -1;
+  if (inicio < n && V[inicio] == valor) {
+    return inicio + 1;
+  }
+  return -1;
 }
 
 int main() {
   int *marmores;
-  int T, N, Q, consulta, resposta;
+  int T = 0, N, Q, consulta, resposta;
 
-  T = 0;
-  while (scanf("%d %d", &N, &Q)) {
-
-    if (N == 0 && Q == 0) {
-      break; //não usar
-    }
-        
+  scanf("%d %d", &N, &Q);
+  while (N != 0 || Q != 0) {
     marmores = (int *)malloc(sizeof(int) * N);
     for (int i = 0; i < N; ++i) {
       scanf("%d", &marmores[i]);
@@ -48,13 +44,14 @@ int main() {
       resposta = pesquisaBinaria(marmores, N, consulta);
       if (resposta == -1) {
         printf("%d not found\n", consulta);
-      }
-      else {
+      } else {
         printf("%d found at %d\n", consulta, resposta);
       }
     }
 
     free(marmores);
+
+    scanf("%d %d", &N, &Q);
   }
 
   return 0;
