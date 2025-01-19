@@ -1,57 +1,67 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define MAX_N 100000
-#define MAX_VALUE 1000000
+#define MAX 1000010
+
+typedef struct {
+    int *data;
+    int size;
+    int capacity;
+} Vector;
+
+void initVector(Vector *v) {
+    v->data = NULL;
+    v->size = 0;
+    v->capacity = 0;
+}
+
+void pushBack(Vector *v, int value) {
+    if (v->size == v->capacity) {
+        v->capacity = (v->capacity == 0) ? 1 : v->capacity * 2;
+        v->data = realloc(v->data, v->capacity * sizeof(int));
+    }
+    v->data[v->size++] = value;
+}
+
+void clearVector(Vector *v) {
+    free(v->data);
+    v->data = NULL;
+    v->size = 0;
+    v->capacity = 0;
+}
+
+Vector T[MAX];
 
 int main() {
-    int num_elementos, num_consultas;
+    int n, m;
 
-    int **pos = (int **)calloc(MAX_VALUE + 1, sizeof(int *));
-    int *sizes = (int *)calloc(MAX_VALUE + 1, sizeof(int));
-
-    while (scanf("%d %d", &num_elementos, &num_consultas) != EOF) {
-        for (int i = 0; i <= MAX_VALUE; i++) {
-            if (pos[i] != NULL) {
-                free(pos[i]);
-                pos[i] = NULL;
-                sizes[i] = 0;
-            }
+    while (scanf("%d %d", &n, &m) != EOF) {
+        for (int i = 0; i < MAX; i++) {
+            initVector(&T[i]);
         }
 
-        int *vetor = (int *)malloc(num_elementos * sizeof(int));
-
-        for (int i = 0; i < num_elementos; i++) {
-            scanf("%d", &vetor[i]);
-
-            int res = vetor[i];
-            if (pos[res] == NULL) {
-                pos[res] = (int *)malloc(num_elementos * sizeof(int));
-            }
-            pos[res][sizes[res]++] = i + 1; 
+        for (int i = 1; i <= n; i++) {
+            int temp;
+            scanf("%d", &temp);
+            pushBack(&T[temp], i);
         }
 
-        for (int i = 0; i < num_consultas; i++) {
+        while (m--) {
             int k, v;
             scanf("%d %d", &k, &v);
-
-            if (v <= MAX_VALUE && sizes[v] >= k) {
-                printf("%d\n", pos[v][k - 1]);
+            k--; 
+            if (k < T[v].size) {
+                printf("%d\n", T[v].data[k]);
             } else {
                 printf("0\n");
             }
         }
 
-        free(vetor);
-    }
-
-    for (int i = 0; i <= MAX_VALUE; i++) {
-        if (pos[i] != NULL) {
-            free(pos[i]);
+        for (int i = 0; i < MAX; i++) {
+            clearVector(&T[i]);
         }
     }
-    free(pos);
-    free(sizes);
 
     return 0;
 }
