@@ -1,46 +1,42 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
 #define MAX_SIZE 10001
-#define MAX_CAIXAS 100
+
+char scanff(int *a);
 
 int main() {
     int rack[MAX_SIZE] = {0}; 
     int n, x, y, num;
+    int inicio, fim, acl;
 
-    while (scanf("%d", &n) != EOF) {
-        for (int i = 0; i < MAX_SIZE; i++) {
-            rack[i] = 0;
-        }
+    while (scanff(&n) != EOF) {
+        memset(rack, 0, sizeof(rack)); 
 
-        for (int i = 0; i < n; i++) {
-            scanf("%d %d", &x, &y);
-            for (int j = x; j <= y; j++) {
-                rack[j]++;
+        for (int j = 0; j < n; j++) {
+            scanf("%d %d", &inicio, &fim);
+            for (int i = inicio; i <= fim; i++) {
+                rack[i]++;
             }
         }
 
+        acl = 0;
         scanf("%d", &num);
 
-        int encontrei = 0;
-        int inicio = -1, fim = -1;
-
-        for (int i = 0; i < MAX_SIZE; i++) {
-            if (rack[i] > 0 && i == num) {
-                if (!encontrei) {
-                    encontrei = 1;
-                    inicio = i;
-                }
-                fim = i;
+        if (rack[num]) {
+            for (int i = 1; i < num; i++) {
+                acl += rack[i];
             }
-        }
 
-        if (encontrei) {
-            printf("%d found from %d to %d\n", num, inicio, fim);
+            printf("%d found from %d to %d\n", num, acl, (acl + rack[num] - 1));
         } else {
             printf("%d not found\n", num);
         }
     }
 
     return 0;
+}
+
+char scanff(int *a) {
+    return scanf("%d", a);
 }
